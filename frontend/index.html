@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Python Editor</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-4">
+  <h1 class="text-2xl font-bold mb-4">Python AI Editor</h1>
+
+<div class="flex w-full h-screen">
+<div class="w-1/2">
+  <button id="run" class="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Run Code</button>
+  <div id="editor" class="h-screen w-full border border-gray-300 rounded"></div>
+</div>
+  
+<div class="w-1/2">
+  <h2 class="text-xl mt-6 mb-1">Output:</h2>
+  <pre id="output" class="bg-white p-3 rounded border border-gray-300 overflow-auto h-screen"></pre>
+</div>
+  
+  
+
+</div>
+
+  
+
+  <script>
+    const editor = ace.edit("editor");
+    editor.setTheme("ace/theme/monokai");
+    editor.session.setMode("ace/mode/python");
+
+    document.getElementById("run").onclick = async () => {
+      const code = editor.getValue();
+      const response = await fetch("http://localhost:5000/run", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code }),
+      });
+      const data = await response.json();
+      document.getElementById("output").textContent = data.output;
+    };
+  </script>
+</body>
+</html>
