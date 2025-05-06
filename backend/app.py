@@ -1,14 +1,17 @@
-from flask import Flask, request, jsonify
-from flask_cors import CORS  # ✅ Add this
+from flask import Flask, request, jsonify, send_from_directory
+from flask_cors import CORS
 import io
 import contextlib
 import numpy as np
 import pandas as pd
 import os
 
+app = Flask(__name__, static_folder="../frontend", static_url_path="")
+CORS(app)
 
-app = Flask(__name__)
-CORS(app)  # ✅ Allow all origins by default
+@app.route("/")
+def serve_frontend():
+    return send_from_directory(app.static_folder, "index.html")
 
 @app.route("/run", methods=["POST"])
 def run_code():
@@ -22,7 +25,6 @@ def run_code():
         output.write(str(e))
 
     return jsonify({"output": output.getvalue()})
-
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
