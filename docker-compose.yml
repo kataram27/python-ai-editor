@@ -1,0 +1,26 @@
+version: "3.8"
+
+services:
+  python-ai-editor:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: python-ai-editor-prod
+    ports:
+      - "5014:5014"
+    environment:
+      - FLASK_ENV=production
+      - PORT=5014
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5014/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - python-ai-editor-network
+
+networks:
+  python-ai-editor-network:
+    driver: bridge

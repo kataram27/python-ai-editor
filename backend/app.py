@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 import io
 import contextlib
@@ -6,12 +6,12 @@ import numpy as np
 import pandas as pd
 import os
 
-app = Flask(__name__, static_folder="../frontend", static_url_path="")
+app = Flask(__name__)
 CORS(app)
 
 @app.route("/")
-def serve_frontend():
-    return send_from_directory(app.static_folder, "index.html")
+def health_check():
+    return jsonify({"status": "healthy", "message": "Python AI Editor API is running"})
 
 @app.route("/run", methods=["POST"])
 def run_code():
